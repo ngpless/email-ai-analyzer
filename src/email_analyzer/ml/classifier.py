@@ -51,6 +51,22 @@ SEED_DATASET: List[Tuple[str, Category]] = [
     ("Кандидат прошёл итоговое собеседование, ждём решения.", Category.IMPORTANT),
     ("ВНИМАНИЕ: на сервере обнаружена критическая уязвимость.", Category.IMPORTANT),
     ("Срок сдачи отчёта — завтра до 18:00, напоминаю.", Category.IMPORTANT),
+
+    # Английские примеры
+    ("Please review the draft presentation by EOD.", Category.WORK),
+    ("Reminder: weekly standup tomorrow at 10 AM.", Category.WORK),
+    ("Happy birthday! Have a wonderful day.", Category.PERSONAL),
+    ("Summer sale — up to 70% off, limited time offer.", Category.PROMO),
+    ("You won the lottery! Click the link to claim.", Category.SPAM),
+    ("Verify your bank account by clicking the link.", Category.PHISHING),
+    ("Critical security patch available — update now.", Category.IMPORTANT),
+
+    # Смешанные / короткие
+    ("Звонок клиенту перенесён", Category.WORK),
+    ("Встретимся в пятницу?", Category.PERSONAL),
+    ("Подарок-сертификат! Забери до конца недели.", Category.PROMO),
+    ("Казино выигрыш бонус немедленно", Category.SPAM),
+    ("Требуется немедленно подтвердить платёж", Category.PHISHING),
 ]
 
 
