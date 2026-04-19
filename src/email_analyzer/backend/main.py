@@ -9,7 +9,7 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 
-from email_analyzer.backend.api import admin, analysis, auth
+from email_analyzer.backend.api import admin, analysis, auth, stats
 from email_analyzer.config import get_settings
 from email_analyzer.db.session import init_db
 
@@ -32,6 +32,7 @@ app = FastAPI(
 app.include_router(auth.router)
 app.include_router(analysis.router)
 app.include_router(admin.router)
+app.include_router(stats.router)
 
 
 @app.get("/", tags=["meta"])
