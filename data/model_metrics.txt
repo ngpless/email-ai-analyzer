@@ -1,0 +1,43 @@
+Классификатор писем — результаты оценивания
+============================================
+
+Объём seed-датасета: 112 примеров
+Число классов: 7
+
+Holdout Accuracy (80/20, stratified): 0.391
+Stratified 5-fold CV Accuracy: 0.402
+
+Требование методички ГИА-2025 (п. 6.13): Accuracy >= 0.70
+Статус по holdout: требует доработки
+Статус по k-fold: требует доработки (ожидаемо для малого датасета)
+
+Classification report (holdout test set):
+              precision    recall  f1-score   support
+
+   important       0.00      0.00      0.00         3
+       other       0.33      0.67      0.44         3
+    personal       1.00      0.33      0.50         3
+    phishing       1.00      0.33      0.50         3
+       promo       0.67      0.50      0.57         4
+        spam       0.40      0.67      0.50         3
+        work       0.25      0.25      0.25         4
+
+    accuracy                           0.39        23
+   macro avg       0.52      0.39      0.40        23
+weighted avg       0.52      0.39      0.40        23
+
+Classification report (k-fold OOF):
+              precision    recall  f1-score   support
+
+   important       0.19      0.19      0.19        16
+       other       0.29      0.33      0.31        15
+    personal       0.60      0.56      0.58        16
+    phishing       0.62      0.62      0.62        16
+       promo       0.53      0.50      0.52        16
+        spam       0.41      0.44      0.42        16
+        work       0.19      0.18      0.18        17
+
+    accuracy                           0.40       112
+   macro avg       0.41      0.40      0.40       112
+weighted avg       0.40      0.40      0.40       112
+
