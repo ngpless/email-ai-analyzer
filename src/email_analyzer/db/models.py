@@ -118,6 +118,18 @@ class EmailMessage(Base):
         return f"<Email #{self.id} from={self.sender!r} subject={self.subject!r}>"
 
 
+class Attachment(Base):
+    """Вложение письма (имя, mime, размер)."""
+
+    __tablename__ = "attachments"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    email_id: Mapped[int] = mapped_column(ForeignKey("emails.id"), index=True)
+    filename: Mapped[str] = mapped_column(String(255))
+    mime_type: Mapped[str] = mapped_column(String(128))
+    size_bytes: Mapped[int] = mapped_column(Integer, default=0)
+
+
 class Classification(Base):
     __tablename__ = "classifications"
 
