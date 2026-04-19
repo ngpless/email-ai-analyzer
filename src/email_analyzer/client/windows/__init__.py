@@ -10,6 +10,7 @@ from email_analyzer.client.windows.rules_window import RulesWindow
 from email_analyzer.client.windows.reports_window import ReportsWindow
 from email_analyzer.client.windows.help_window import HelpWindow
 from email_analyzer.client.windows.about_window import AboutWindow
+from email_analyzer.client.windows.stats_window import StatsWindow
 from email_analyzer.client.windows.add_rule_dialog import AddRuleDialog
 from email_analyzer.client.windows.import_dialog import ImportDialog
 
@@ -24,6 +25,7 @@ __all__ = [
     "ReportsWindow",
     "HelpWindow",
     "AboutWindow",
+    "StatsWindow",
     "AddRuleDialog",
     "ImportDialog",
 ]
