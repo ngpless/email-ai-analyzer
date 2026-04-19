@@ -28,6 +28,7 @@ requests==2.32.3
 # Document export
 python-docx==1.1.2
 openpyxl==3.1.5
+matplotlib>=3.9
 
 # Tests
 pytest==8.3.3
