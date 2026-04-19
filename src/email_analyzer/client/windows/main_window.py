@@ -26,7 +26,9 @@ from email_analyzer.client.windows.import_dialog import ImportDialog
 from email_analyzer.client.windows.profile_window import ProfileWindow
 from email_analyzer.client.windows.reports_window import ReportsWindow
 from email_analyzer.client.windows.rules_window import RulesWindow
+from email_analyzer.client.windows.search_window import SearchWindow
 from email_analyzer.client.windows.settings_window import SettingsWindow
+from email_analyzer.client.windows.stats_window import StatsWindow
 
 
 def _run_modal(dialog: QDialog) -> bool:
@@ -61,6 +63,8 @@ class MainWindow(QMainWindow):
         tools_menu = menubar.addMenu("Инструменты")
         tools_menu.addAction(self._action("Настройки", self._open_settings))
         tools_menu.addAction(self._action("Правила", self._open_rules))
+        tools_menu.addAction(self._action("Поиск по смыслу", self._open_search))
+        tools_menu.addAction(self._action("Статистика", self._open_stats))
 
         user_menu = menubar.addMenu("Пользователь")
         user_menu.addAction(self._action("Личный кабинет", self._open_profile))
@@ -132,6 +136,12 @@ class MainWindow(QMainWindow):
 
     def _open_rules(self) -> None:
         self._open_child(RulesWindow(self.state))
+
+    def _open_search(self) -> None:
+        self._open_child(SearchWindow(self._emails))
+
+    def _open_stats(self) -> None:
+        self._open_child(StatsWindow(self._emails))
 
     def _open_profile(self) -> None:
         self._open_child(ProfileWindow(self.state))
