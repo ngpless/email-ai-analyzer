@@ -35,10 +35,11 @@ data/*.sqlite3
 .env
 .env.local
 
-# PyInstaller
+# PyInstaller — артефакты сборки не кладём в Git, .exe упаковывается в ZIP-сдачу
 *.spec
 build/
 dist/
+EmailAIAnalyzer.exe
 
 # Jupyter
 .ipynb_checkpoints/

@@ -6,6 +6,13 @@
 ## [Unreleased]
 
 ### Добавлено
+- Собранный исполняемый файл `dist/EmailAIAnalyzer.exe` через PyInstaller 6.19
+  (размер 125 МБ, включает Qt, scikit-learn, numpy — в Git не коммитится,
+  прилагается к ZIP-сдаче).
+- Генератор отчёта по преддипломной практике (`scripts/generate_report.py`),
+  собирающий docx с титулом, главами, 51 листингом кода и 17 изображениями.
+- Генератор ассетов (`scripts/generate_assets.py`) — 14 скриншотов окон
+  в offscreen-режиме Qt + 3 графика matplotlib.
 - CHANGELOG для отслеживания истории изменений.
 - CI на GitHub Actions (pytest на Windows и Ubuntu, Python 3.11/3.12).
 - Dockerfile и docker-compose.yml с PostgreSQL.
