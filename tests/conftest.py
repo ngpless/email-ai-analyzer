@@ -11,7 +11,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import Session, sessionmaker
 from sqlalchemy.pool import StaticPool
 
-from email_analyzer.backend.api import admin, analysis, auth
+from email_analyzer.backend.api import admin, analysis, auth, stats
 from email_analyzer.backend.deps import get_db
 from email_analyzer.db.models import Base
 
@@ -46,6 +46,7 @@ def app_with_db(test_engine) -> FastAPI:
     app.include_router(auth.router)
     app.include_router(analysis.router)
     app.include_router(admin.router)
+    app.include_router(stats.router)
 
     def _override_get_db() -> Iterator[Session]:
         factory = sessionmaker(bind=test_engine, autoflush=False, autocommit=False)
