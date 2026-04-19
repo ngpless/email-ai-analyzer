@@ -176,3 +176,106 @@ class AnalysisReport(Base):
     generated_at: Mapped[datetime] = mapped_column(DateTime, default=_utcnow)
 
     owner: Mapped[User] = relationship(back_populates="reports")
+
+
+class Label(Base):
+    """Пользовательская метка для произвольной группировки писем."""
+
+    __tablename__ = "labels"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    owner_id: Mapped[int] = mapped_column(ForeignKey("users.id"), index=True)
+    name: Mapped[str] = mapped_column(String(64))
+    color: Mapped[str] = mapped_column(String(16), default="#808080")
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=_utcnow)
+
+
+class EmailLabel(Base):
+    """Связь многие-ко-многим между письмами и метками."""
+
+    __tablename__ = "email_labels"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    email_id: Mapped[int] = mapped_column(ForeignKey("emails.id"), index=True)
+    label_id: Mapped[int] = mapped_column(ForeignKey("labels.id"), index=True)
+
+
+class EmailThread(Base):
+    """Цепочка переписки (Re:, Fwd:)."""
+
+    __tablename__ = "threads"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    owner_id: Mapped[int] = mapped_column(ForeignKey("users.id"), index=True)
+    subject_normalized: Mapped[str] = mapped_column(String(512))
+    first_message_at: Mapped[Optional[datetime]] = mapped_column(DateTime)
+    last_message_at: Mapped[Optional[datetime]] = mapped_column(DateTime)
+    message_count: Mapped[int] = mapped_column(Integer, default=1)
+
+
+class ImapAccount(Base):
+    """Сохранённые параметры IMAP (без пароля — только хост/порт/логин)."""
+
+    __tablename__ = "imap_accounts"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    owner_id: Mapped[int] = mapped_column(ForeignKey("users.id"), index=True)
+    nickname: Mapped[str] = mapped_column(String(64))
+    host: Mapped[str] = mapped_column(String(128))
+    port: Mapped[int] = mapped_column(Integer, default=993)
+    username: Mapped[str] = mapped_column(String(128))
+    use_ssl: Mapped[bool] = mapped_column(default=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=_utcnow)
+
+
+class AuditLogEntry(Base):
+    """Журнал действий пользователя для контроля безопасности."""
+
+    __tablename__ = "audit_log"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    user_id: Mapped[Optional[int]] = mapped_column(ForeignKey("users.id"), index=True)
+    action: Mapped[str] = mapped_column(String(64))
+    details: Mapped[Optional[str]] = mapped_column(Text)
+    ip_address: Mapped[Optional[str]] = mapped_column(String(45))
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=_utcnow)
+
+
+class Notification(Base):
+    """Уведомления пользователя (о фишинге, важном письме, новых правилах)."""
+
+    __tablename__ = "notifications"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), index=True)
+    kind: Mapped[str] = mapped_column(String(32))
+    message: Mapped[str] = mapped_column(String(512))
+    is_read: Mapped[bool] = mapped_column(default=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=_utcnow)
+
+
+class TrainingSample(Base):
+    """Пример для дообучения ML-модели на пользовательских данных."""
+
+    __tablename__ = "training_samples"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    owner_id: Mapped[int] = mapped_column(ForeignKey("users.id"), index=True)
+    text: Mapped[str] = mapped_column(Text)
+    category: Mapped[Category] = mapped_column(SQLEnum(Category))
+    source: Mapped[str] = mapped_column(String(32), default="manual")  # manual / email / imported
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=_utcnow)
+
+
+class ModelVersion(Base):
+    """История обученных версий классификатора."""
+
+    __tablename__ = "model_versions"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    version: Mapped[str] = mapped_column(String(32), unique=True)
+    algorithm: Mapped[str] = mapped_column(String(64))
+    accuracy: Mapped[float] = mapped_column(default=0.0)
+    trained_samples: Mapped[int] = mapped_column(Integer, default=0)
+    file_path: Mapped[str] = mapped_column(String(512))
+    trained_at: Mapped[datetime] = mapped_column(DateTime, default=_utcnow)
