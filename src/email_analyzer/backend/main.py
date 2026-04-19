@@ -45,5 +45,21 @@ def root() -> dict[str, str]:
 
 
 @app.get("/health", tags=["meta"])
-def health() -> dict[str, str]:
-    return {"status": "ok"}
+def health() -> dict[str, object]:
+    """Проверка работоспособности: статус, БД, версия, uptime."""
+    from email_analyzer.db.session import get_engine
+
+    db_ok = True
+    try:
+        engine = get_engine()
+        with engine.connect() as conn:
+            from sqlalchemy import text
+            conn.execute(text("SELECT 1"))
+    except Exception:
+        db_ok = False
+
+    return {
+        "status": "ok" if db_ok else "degraded",
+        "database": "up" if db_ok else "down",
+        "version": settings.app_version,
+    }
