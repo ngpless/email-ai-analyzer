@@ -72,10 +72,15 @@
 
 ### ML-ядро (`src/email_analyzer/ml/`)
 
-- `classifier.py` — TF-IDF + LogReg, seed-набор данных (21 пример × 7 категорий), save/load через `joblib`.
+- `classifier.py` — TF-IDF + LogReg, seed-набор данных (RU + EN), save/load через `joblib`.
 - `spam_detector.py` — набор эвристик (ключевые слова, капс-lock, поддельные отправители).
 - `summarizer.py` — экстрактивная суммаризация на TF-IDF.
 - `entity_extractor.py` — извлечение дат/сумм/почты/телефонов/URL/задач регулярками.
+- `language_detector.py` — определение языка (ru/en/mixed) по соотношению алфавитов.
+- `sentiment.py` — тональность (positive/neutral/negative) на лексиконе.
+- `priority.py` — приоритет письма (critical/high/normal/low).
+- `semantic_search.py` — поиск по смыслу (TF-IDF + cosine similarity).
+- `llm_provider.py` — абстракция LLM-провайдера для замены локальных моделей.
 
 Все компоненты имеют общий стиль: чистые функции/методы, входные типы явные, результат — immutable `dataclass(frozen=True, slots=True)`.
 
