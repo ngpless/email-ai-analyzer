@@ -1,0 +1,28 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "email-analyzer"
+version = "0.1.0"
+description = "AI-приложение для анализа почтовых сообщений"
+authors = [{name = "Нефедов Алексей Геннадьевич", email = "ngpless@mail.fr"}]
+requires-python = ">=3.11"
+license = {text = "Educational"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+minversion = "8.0"
+testpaths = ["tests"]
+pythonpath = ["src"]
+addopts = "-ra --strict-markers"
+filterwarnings = [
+    "ignore::DeprecationWarning",
+    "ignore::PendingDeprecationWarning",
+]
+
+[tool.coverage.run]
+source = ["src/email_analyzer"]
+omit = ["*/tests/*", "*/client/*"]
