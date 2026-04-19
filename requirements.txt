@@ -10,8 +10,11 @@ sqlalchemy==2.0.35
 alembic==1.13.3
 
 # Security
-passlib[bcrypt]==1.7.4
+bcrypt>=4.1
 python-jose[cryptography]==3.3.0
+
+# Email validation (for pydantic EmailStr)
+email-validator>=2.2
 
 # ML / NLP
 scikit-learn==1.5.2

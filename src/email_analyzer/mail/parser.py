@@ -83,7 +83,10 @@ def _extract_body(msg: StdEmailMessage) -> str:
         if html_parts:
             return _strip_html("\n".join(html_parts))
         return ""
-    return _decode_part(msg)
+    decoded = _decode_part(msg)
+    if msg.get_content_type() == "text/html":
+        return _strip_html(decoded)
+    return decoded
 
 
 def _decode_part(part: StdEmailMessage) -> str:
