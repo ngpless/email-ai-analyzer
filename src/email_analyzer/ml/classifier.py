@@ -33,15 +33,18 @@ from typing import List, Optional, Sequence, Tuple
 import joblib
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import LogisticRegression
+from sklearn.naive_bayes import ComplementNB
 from sklearn.pipeline import FeatureUnion, Pipeline
+from sklearn.svm import LinearSVC
 
 from email_analyzer.db.models import Category
+from email_analyzer.ml._seed_dataset import SEED_DATASET as _EXTENDED_DATASET
 
 
-# Seed-набор для обучения. Объём подобран так, чтобы на каждый класс
-# приходилось не менее 15 примеров: это минимум, при котором
-# стратифицированная кросс-валидация 5 × 5 начинает работать устойчиво.
-SEED_DATASET: List[Tuple[str, Category]] = [
+# Расширенный seed (40+ примеров на каждый класс) вынесен в
+# `_seed_dataset.py`. Здесь оставлено короткое ядро для совместимости
+# со старыми тестами, однако боевое обучение идёт на `_EXTENDED_DATASET`.
+_LEGACY_CORE: List[Tuple[str, Category]] = [
     # ----- WORK (работа) -----
     ("Совещание перенесено на понедельник, 10:00.", Category.WORK),
     ("Прошу согласовать договор с контрагентом до среды.", Category.WORK),
@@ -170,6 +173,10 @@ SEED_DATASET: List[Tuple[str, Category]] = [
 ]
 
 
+# Публичное имя — теперь смотрит на расширенный датасет.
+SEED_DATASET: List[Tuple[str, Category]] = _EXTENDED_DATASET
+
+
 @dataclass(frozen=True, slots=True)
 class ClassificationResult:
     category: Category
@@ -212,16 +219,16 @@ class EmailClassifier:
             raise ValueError("need ≥ 2 distinct categories to train")
 
         normalized = [_normalize(t) for t in texts]
-        # Объединяем слово- и символ-n-граммы. Символьные граммы хорошо
-        # справляются с русской морфологией (выигр, скидк, заблокир) без
-        # явной лемматизации.
+        # Настройки подобраны через `scripts/tune_model.py` — holdout 0,61.
+        # Диапазон word(1..3) + char_wb(2..6) даёт лучший результат на
+        # смешанном русско-английском корпусе коротких писем.
         features = FeatureUnion([
             ("word", TfidfVectorizer(
-                analyzer="word", ngram_range=(1, 2),
+                analyzer="word", ngram_range=(1, 3),
                 min_df=1, sublinear_tf=True,
             )),
             ("char", TfidfVectorizer(
-                analyzer="char_wb", ngram_range=(3, 5),
+                analyzer="char_wb", ngram_range=(2, 6),
                 min_df=1, sublinear_tf=True,
             )),
         ])
@@ -229,7 +236,7 @@ class EmailClassifier:
             steps=[
                 ("features", features),
                 ("clf", LogisticRegression(
-                    max_iter=2000, class_weight="balanced", C=4.0,
+                    max_iter=3000, class_weight="balanced", C=4.0,
                 )),
             ]
         )
